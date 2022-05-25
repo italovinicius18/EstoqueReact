@@ -1,6 +1,8 @@
+import './Error.css'
+
 const Error = () => {
   return (
-    <div>
+    <div className="Error">
       <h1>Página não encontrada!</h1>
     </div>
   );

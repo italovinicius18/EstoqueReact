@@ -25,6 +25,6 @@ services:
     depends_on:
       - db
     ports: 
-      - "81:3000"
+      - "3001:3001"
     volumes:
-      - /server:/server
+      - .:/server

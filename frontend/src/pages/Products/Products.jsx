@@ -51,7 +51,7 @@ const Products = () => {
           open={showUpdatePopUp}
           onClose={() => setShowUpdatePopUp(false)}
         >
-          <DialogTitle>Adicionar produto</DialogTitle>
+          <DialogTitle>Editar produto</DialogTitle>
           <DialogContent>
             <div>{`Id: ${params.id}`}</div>
             <TextField
@@ -83,7 +83,7 @@ const Products = () => {
               id="price"
               variant="standard"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => setPrice(stringToMoney(e.target.value))}
             />
             <TextField
               inputProps={{ maxLength: 50, required: true }}
@@ -263,7 +263,7 @@ const Products = () => {
         <div className="productsContainerTitle">
           <h1>Produtos</h1>
         </div>
-        <div className="Products-container-content">
+        <div className="productsContainerContent">
           <div className="addProductArea">
             <Button variant="outlined" onClick={() => setShowAddPopUp(true)}>
               Adicionar produto
@@ -334,8 +334,6 @@ const Products = () => {
           <Button onClick={() => setShowAddPopUp(false)}>Cancelar</Button>
           <Button
             onClick={() => {
-              console.log(price);
-              console.log(products);
               api
                 .post("/products", {
                   name,
@@ -344,7 +342,6 @@ const Products = () => {
                   measure,
                 })
                 .then((response) => {
-                  console.log(response.data);
                   setProducts([...products, response.data]);
                   setShowAddPopUp(false);
                   resetState();

@@ -127,14 +127,14 @@ routes.get('/supplies', async (req, res) => {
 });
 
 routes.post('/supplies', async (req, res) => {
-  const { name, city, estate } = req.body;
+  const { name, city, state } = req.body;
 
   try {
 
     const supply = await Supply.create({
       name: name,
       city: city,
-      estate: estate,
+      state: state,
     });
     res.send(supply);
   }
@@ -146,7 +146,7 @@ routes.post('/supplies', async (req, res) => {
 
 routes.put('/supplies/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, city, estate } = req.body;
+  const { name, city, state } = req.body;
 
   try {
     const supply = await Supply.findByPk(id);
@@ -159,7 +159,7 @@ routes.put('/supplies/:id', async (req, res) => {
     await supply.update({
       name: name,
       city: city,
-      estate: estate
+      state: state
     });
 
     res.send(supply);

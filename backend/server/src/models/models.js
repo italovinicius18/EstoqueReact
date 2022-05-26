@@ -73,7 +73,7 @@ const Supply = sequelize.define(
         max: 50,
       },
     },
-    estate: {
+    state: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -119,7 +119,15 @@ const ProductSupply = sequelize.define(
       validate: {
         notEmpty: true,
       }
-    }
+    },
+    measure: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        max: 50,
+      },
+    },
   },
   {
     freezeTableName: true,

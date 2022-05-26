@@ -32,8 +32,8 @@ const Router = () => {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/supply" element={<Products/>} />
-          <Route exact path="/products" element={<Supply/>} />
+          <Route exact path="/products" element={<Products/>} />
+          <Route exact path="/supply" element={<Supply/>} />
           <Route exact path="/list" element={<List/>} />
 
           <Route path="*" element={<Error />} />

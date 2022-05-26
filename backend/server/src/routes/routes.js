@@ -52,16 +52,17 @@ routes.get('/products', async (req, res) => {
 });
 
 routes.post('/products', async (req, res) => {
-  const { name, category, price, create_date, create_user, modify_date, modify_user } = req.body;
-
+  const { name, category, price, measure} = req.body;
+  console.log(req.body);
   try {
 
     const product = await Product.create({
       name: name,
       category: category,
-      price: price
+      price: price,
+      measure: measure
     });
-    console.log(product)
+    console.log(product);
     res.send(product);
   }
   catch (error) {
@@ -72,7 +73,7 @@ routes.post('/products', async (req, res) => {
 
 routes.put('/products/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, category, price } = req.body;
+  const { name, category, price, measure } = req.body;
 
   try {
     const product = await Product.findByPk(id);
@@ -85,7 +86,8 @@ routes.put('/products/:id', async (req, res) => {
     await product.update({
       name: name,
       category: category,
-      price: price
+      price: price,
+      measure: measure
     });
 
     res.send(product);
@@ -134,7 +136,6 @@ routes.post('/supplies', async (req, res) => {
       city: city,
       estate: estate,
     });
-    console.log(supply)
     res.send(supply);
   }
   catch (error) {

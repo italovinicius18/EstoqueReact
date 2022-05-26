@@ -33,6 +33,14 @@ const Product = sequelize.define(
         notEmpty: true,
       },
     },
+    measure: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        max: 50,
+      },
+    },
   },
   {
     freezeTableName: true,
@@ -111,16 +119,7 @@ const ProductSupply = sequelize.define(
       validate: {
         notEmpty: true,
       }
-    },
-    measure: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        max: 50,
-      },
-    },
-
+    }
   },
   {
     freezeTableName: true,

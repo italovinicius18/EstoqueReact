@@ -8,8 +8,6 @@ export const getToken = () => localStorage.getItem(TOKEN_KEY);
 
 export const login = (name,password) => {
 
-  console.log(name,password)
-
   api.post('/login',{
     name: name,
     password: password

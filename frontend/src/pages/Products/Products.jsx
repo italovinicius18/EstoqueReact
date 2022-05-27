@@ -24,6 +24,7 @@ const Products = () => {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [measure, setMeasure] = useState("");
+  const [productSupplies, setProductSupplies] = useState([]);
   const [showAddPopUp, setShowAddPopUp] = useState(false);
   const [showUpdatePopUp, setShowUpdatePopUp] = useState(false);
   const [showDeletePopUp, setShowDeletePopUp] = useState(false);
@@ -32,7 +33,20 @@ const Products = () => {
     api.get("/products").then((response) => {
       setProducts(response.data);
     });
+
+    api.get("/productsupplies").then((response) => {
+      setProductSupplies(response.data);
+    });
   }, []);
+
+  const checkProductSupplies = (productId) => {
+    const productSuppliesFiltered = productSupplies.filter(
+      (productSupply) => productSupply.product_id === productId
+    );
+
+    console.log(productSuppliesFiltered.length > 0);
+    return productSuppliesFiltered.length > 0;
+  };
 
   const UpdateButton = (params) => {
     return (
@@ -117,7 +131,7 @@ const Products = () => {
                         }
                         return product;
                       })
-                    )
+                    );
                     setShowUpdatePopUp(false);
                     resetState();
                   })
@@ -144,6 +158,10 @@ const Products = () => {
           color="primary"
           size="small"
           onClick={() => {
+            if (checkProductSupplies(params.id)) {
+              alert("Não é possível excluir produto em estoque");
+              return;
+            }
             setShowDeletePopUp(true);
           }}
         >

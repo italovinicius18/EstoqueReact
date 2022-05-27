@@ -54,6 +54,8 @@ const Supply = () => {
   const [name, setName] = useState("");
   const [state, setState] = useState("DF");
   const [city, setCity] = useState("");
+  const [productSupplies, setProductSupplies] = useState([]);
+
   const [showAddPopUp, setShowAddPopUp] = useState(false);
   const [showUpdatePopUp, setShowUpdatePopUp] = useState(false);
   const [showDeletePopUp, setShowDeletePopUp] = useState(false);
@@ -62,7 +64,19 @@ const Supply = () => {
     api.get("/supplies").then((response) => {
       setSupplies(response.data);
     });
+
+    api.get("/productsupplies").then((response) => {
+      setProductSupplies(response.data);
+    });
   }, []);
+
+  const checkProductSupplies = (supplyId) => {
+    const productSuppliesFiltered = productSupplies.filter(
+      (productSupply) => productSupply.supply_id === supplyId
+    );
+
+    return productSuppliesFiltered.length > 0;
+  };
 
   const UpdateButton = (params) => {
     return (
@@ -171,6 +185,12 @@ const Supply = () => {
           color="primary"
           size="small"
           onClick={() => {
+            if (checkProductSupplies(params.id)) {
+              alert(
+                "Este estoque não pode ser excluído, pois existem produtos associados a ele."
+              );
+              return;
+            }
             setShowDeletePopUp(true);
           }}
         >

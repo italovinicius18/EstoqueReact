@@ -60,7 +60,6 @@ routes.get("/products", async (req, res) => {
 
 routes.post("/products", async (req, res) => {
   const { name, category, price, measure } = req.body;
-  console.log(req.body);
   try {
     const product = await Product.create({
       name: name,
@@ -68,7 +67,6 @@ routes.post("/products", async (req, res) => {
       price: price,
       measure: measure,
     });
-    console.log(product);
     res.send(product);
   } catch (error) {
     res.status(500).send({ message: "Erro ao criar o produto", error });
@@ -199,7 +197,6 @@ routes.get("/productsupplies", async (req, res) => {
 });
 
 routes.post("/productsupplies", async (req, res) => {
-  console.log(req.body);
   const { selectedProduct, selectedSupply, amount, measure } = req.body;
 
   try {

@@ -264,7 +264,7 @@ const Supply = () => {
 
   const resetState = () => {
     setName("");
-    setState("");
+    setState("DF");
     setCity("");
   };
 

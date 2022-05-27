@@ -1,7 +1,14 @@
 const { Router } = require("express");
 const jwt = require("jsonwebtoken");
 
-const {sequelize, Product, Supply, ProductSupply} = require("../models/models");
+const { QueryTypes } = require("sequelize");
+
+const {
+  sequelize,
+  Product,
+  Supply,
+  ProductSupply,
+} = require("../models/models");
 
 const routes = new Router();
 
@@ -35,7 +42,7 @@ routes.post("/login", (req, res) => {
         return;
       }
 
-      res.status(200).send({"token": token});
+      res.status(200).send({ token: token });
       res.end();
     });
   } else {
@@ -45,39 +52,36 @@ routes.post("/login", (req, res) => {
 
 // Products CRUD
 
-routes.get('/products', async (req, res) => {
+routes.get("/products", async (req, res) => {
   const products = await Product.findAll();
 
   res.send(products);
 });
 
-routes.post('/products', async (req, res) => {
-  const { name, category, price, measure} = req.body;
+routes.post("/products", async (req, res) => {
+  const { name, category, price, measure } = req.body;
   console.log(req.body);
   try {
-
     const product = await Product.create({
       name: name,
       category: category,
       price: price,
-      measure: measure
+      measure: measure,
     });
     console.log(product);
     res.send(product);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ message: "Erro ao criar o produto", error });
   }
-  
 });
 
-routes.put('/products/:id', async (req, res) => {
+routes.put("/products/:id", async (req, res) => {
   const { id } = req.params;
   const { name, category, price, measure } = req.body;
 
   try {
     const product = await Product.findByPk(id);
-    
+
     if (!product) {
       res.status(404).send({ message: "Produto não encontrado" });
       return;
@@ -87,17 +91,16 @@ routes.put('/products/:id', async (req, res) => {
       name: name,
       category: category,
       price: price,
-      measure: measure
+      measure: measure,
     });
 
     res.send(product);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ message: "Erro ao atualizar o produto", error });
   }
 });
 
-routes.delete('/products/:id', async (req, res) => {
+routes.delete("/products/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -111,46 +114,41 @@ routes.delete('/products/:id', async (req, res) => {
     await product.destroy();
 
     res.send(product);
-
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ message: "Erro ao deletar o produto", error });
   }
 });
 
 // Supplies CRUD
 
-routes.get('/supplies', async (req, res) => {
+routes.get("/supplies", async (req, res) => {
   const supplies = await Supply.findAll();
 
   res.send(supplies);
 });
 
-routes.post('/supplies', async (req, res) => {
+routes.post("/supplies", async (req, res) => {
   const { name, city, state } = req.body;
 
   try {
-
     const supply = await Supply.create({
       name: name,
       city: city,
       state: state,
     });
     res.send(supply);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ message: "Erro ao criar o estoque", error });
   }
-  
 });
 
-routes.put('/supplies/:id', async (req, res) => {
+routes.put("/supplies/:id", async (req, res) => {
   const { id } = req.params;
   const { name, city, state } = req.body;
 
   try {
     const supply = await Supply.findByPk(id);
-    
+
     if (!supply) {
       res.status(404).send({ message: "Estoque não encontrado" });
       return;
@@ -159,17 +157,16 @@ routes.put('/supplies/:id', async (req, res) => {
     await supply.update({
       name: name,
       city: city,
-      state: state
+      state: state,
     });
 
     res.send(supply);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ message: "Erro ao atualizar o estoque", error });
   }
 });
 
-routes.delete('/supplies/:id', async (req, res) => {
+routes.delete("/supplies/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -183,10 +180,88 @@ routes.delete('/supplies/:id', async (req, res) => {
     await supply.destroy();
 
     res.send(supply);
-
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ message: "Erro ao deletar o estoque", error });
+  }
+});
+
+routes.get("/productsupplies", async (req, res) => {
+  const productSupplies = await sequelize.query(
+    `SELECT product_supply.id as id, product_id, supply_id, amount, product_supply.measure as product_supply_measure, supply_id ,supply.name as supply_name, state, city, product_id, product.name as product_name, product.category as product_category, price, product.measure as product_measure
+    FROM product_supply
+    join supply on supply_id=supply.id
+    join product on product_id = product.id
+    ORDER BY supply_id ASC;`,
+    { type: QueryTypes.SELECT }
+  );
+
+  res.send(productSupplies);
+});
+
+routes.post("/productsupplies", async (req, res) => {
+  console.log(req.body);
+  const { selectedProduct, selectedSupply, amount, measure } = req.body;
+
+  try {
+    const productSupply = await ProductSupply.create({
+      product_id: selectedProduct,
+      supply_id: selectedSupply,
+      amount: amount,
+      measure: measure,
+    });
+    res.send(productSupply);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Erro ao criar o produto no estoque", error });
+  }
+});
+
+routes.put("/productsupplies/:id", async (req, res) => {
+  const { id } = req.params;
+  const { selectedProduct, selectedSupply, amount, measure } = req.body;
+
+  try {
+    const productSupply = await ProductSupply.findByPk(id);
+
+    if (!productSupply) {
+      res.status(404).send({ message: "Produto no estoque não encontrado" });
+      return;
+    }
+
+    await productSupply.update({
+      product_id: selectedProduct,
+      supply_id: selectedSupply,
+      amount: amount,
+      measure: measure,
+    });
+
+    res.send(productSupply);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Erro ao atualizar o produto no estoque", error });
+  }
+});
+
+routes.delete("/productsupplies/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const productSupply = await ProductSupply.findByPk(id);
+
+    if (!productSupply) {
+      res.status(404).send({ message: "Produto no estoque não encontrado" });
+      return;
+    }
+
+    await productSupply.destroy();
+
+    res.send(productSupply);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Erro ao deletar o produto no estoque", error });
   }
 });
 

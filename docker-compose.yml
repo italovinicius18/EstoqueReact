@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgres
+    build: 
+      context: ./backend/db
+      dockerfile: db.Dockerfile
+    ports:
+        - 5432:5432
+    volumes:
+      - ./backend/db/fisic.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  server:
+    container_name: server
+    build: 
+      context: ./backend/server
+      dockerfile: node.Dockerfile
+    depends_on:
+      - db
+    ports: 
+      - "3001:3001"
+    volumes:
+      - .:/server
+
+  front:
+    container_name: front
+    build: 
+      context: ./frontend
+      dockerfile: react.Dockerfile
+    depends_on:
+      - server
+    ports: 
+      - "3000:3000"
+    volumes:
+      - .:/front

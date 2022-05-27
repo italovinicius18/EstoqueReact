@@ -2,6 +2,7 @@ CREATE TABLE PRODUCT (
    id SERIAL NOT NULL,
    name VARCHAR(50) NOT NULL,
    category VARCHAR(50) NOT NULL,
+   measure  VARCHAR(50) NOT NULL,
    price MONEY NOT NULL,
    CONSTRAINT product_pk PRIMARY KEY (id)
 );

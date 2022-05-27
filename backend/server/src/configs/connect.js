@@ -1,10 +1,6 @@
 const { Sequelize } = require("sequelize");
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize("frexco", "postgres", "postgres", {
-  host: "db",
-  port: 5432,
-  dialect: "postgres",
-});
+const sequelize = new Sequelize("postgres://postgres:postgres@postgres:5432/frexco");
 
 module.exports = sequelize;

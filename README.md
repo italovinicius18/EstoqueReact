@@ -1,5 +1,5 @@
 <h1 align="center">
-  <p align="center">Desafio Full Stack Developer - Frexco</p>
+  <p align="center">Estoque - Frexco</p>
   <a href="https://www.frexco.com.br/"><img src="https://media.glassdoor.com/sqll/4566059/frexco-brazil-squarelogo-1629286941077.png" alt="Docusaurus"></a>
   
   [![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)
